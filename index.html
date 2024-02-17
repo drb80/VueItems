@@ -2,18 +2,23 @@
 <html>
   <head>
     <title>A Todo SPA</title>
+    <!-- Pull in the Vue package -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   </head>
 
   <body>
     <div id="Itemlist">
       <ul>
+      <!-- A Vue for loop -->
       <li v-for="item in items">
+        <!-- A Vue delete click event handler -->
         <button v-on:click="deleteItem(item.id)">Done!</button>
+        <!-- Vue mustashes -->
         {{item.when}} {{item.what}}
       </li>
       </ul>
 
+      <!-- A Vue submit click event handler -->
       <form v-on:submit="newItem">
         <div>
           <label for="what">What: </label>
@@ -27,41 +32,50 @@
 
     <script type="text/javascript">
       new Vue({
+        // The id from above.
         el: '#Itemlist',
+        // The data displayed in the v-for loop above.
         data: { items: [] },
         methods: {
+          // Grab all the items from the JSON API
           showItems: function() {
             fetch('http://localhost:3000/items.json')
               .then(response => response.json()
                 .then(json => { this.items = json; }))
                 .catch(error => { console.log(error); })
-              .catch(error => { console.log(error); });
+              .catch(error => { console.log(error); })
           },
+          // Delete one item via the JSON API
           deleteItem: function(id) {
             fetch('http://localhost:3000/items/' + id + '.json',
               {method: 'DELETE'})
                 .then(this.showItems)
-                .catch(error => { console.log(error); });
+                .catch(error => { console.log(error); })
               },
+          // Create one item via the JSON API
           newItem: function(e) {
-            e.preventDefault();
+            // Don't submit the usual way.
+            e.preventDefault()
 
+            // Grab the data from the form.
             data = {what: e.target.elements.what.value,
-              when: e.target.elements.when.value};
+              when: e.target.elements.when.value}
 
+            // Submit via JSON.
             fetch('http://localhost:3000/items.json', {
               method: 'POST',
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(data),
             })
-            .then(this.showItems)
-            .catch(error => { console.log(error); });
+              .then(this.showItems)
+              .catch(error => { console.log(error); })
           },
         },
+        // The first thing to do.
         mounted: function() {
-          this.showItems();
+          this.showItems()
         },
-    });
+    })
     </script>
   </body>
 </html>
