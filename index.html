@@ -1,68 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>A Todo SPA</title>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-</head>
-<body>
+  <head>
+    <title>A Todo SPA</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  </head>
 
-<div id="Itemlist">
-    <ul>
-    <li v-for="item in items">
+  <body>
+    <div id="Itemlist">
+      <ul>
+      <li v-for="item in items">
         <button v-on:click="deleteItem(item.id)">Done!</button>
         {{item.when}} {{item.what}}
-    </li>
-    </ul>
+      </li>
+      </ul>
 
-    <form v-on:submit="newItem">
-      <div>
-        <label for="what">What: </label>
-        <input id="what" type="text">
-        <label for="when">When: </label>
-        <input id="when" type="date">
-        <input type="submit" value="New">
-      </div>
-    </form>
-</div>
+      <form v-on:submit="newItem">
+        <div>
+          <label for="what">What: </label>
+          <input id="what" type="text">
+          <label for="when">When: </label>
+          <input id="when" type="date">
+          <input type="submit" value="New">
+        </div>
+      </form>
+    </div>
 
-<script type="text/javascript">
-new Vue({
-    el: '#Itemlist',
-    data: { items: [] },
-    methods: {
-        showItems: function() {
+    <script type="text/javascript">
+      new Vue({
+        el: '#Itemlist',
+        data: { items: [] },
+        methods: {
+          showItems: function() {
             fetch('http://localhost:3000/items.json')
-                .then(response => response.json()
-                    .then(json => { this.items = json; }))
-                    .catch(error => { console.log(error); })
-                .catch(error => { console.log(error); });
-        },
-        deleteItem: function(id) {
+              .then(response => response.json()
+                .then(json => { this.items = json; }))
+                .catch(error => { console.log(error); })
+              .catch(error => { console.log(error); });
+          },
+          deleteItem: function(id) {
             fetch('http://localhost:3000/items/' + id + '.json',
-                {method: 'DELETE'})
+              {method: 'DELETE'})
                 .then(this.showItems)
                 .catch(error => { console.log(error); });
-        },
-        newItem: function(e) {
+              },
+          newItem: function(e) {
             e.preventDefault();
 
             data = {what: e.target.elements.what.value,
-                when: e.target.elements.when.value};
+              when: e.target.elements.when.value};
 
             fetch('http://localhost:3000/items.json', {
-                method: 'POST',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+              method: 'POST',
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
             })
             .then(this.showItems)
             .catch(error => { console.log(error); });
+          },
         },
-    },
-    mounted: function() {
-        this.showItems();
-    },
-});
-
-</script>
-</body>
+        mounted: function() {
+          this.showItems();
+        },
+    });
+    </script>
+  </body>
 </html>
