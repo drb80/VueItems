@@ -1,4 +1,3 @@
-<script type="text/javascript">
 new Vue({
   // The id from the document.
   el: '#Itemlist',
@@ -49,4 +48,3 @@ new Vue({
     this.showItems()
   },
 })
-</script>
